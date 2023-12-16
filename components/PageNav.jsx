@@ -10,7 +10,10 @@ const StyledNav = styled.nav`
   padding-bottom: 3rem;
   text-align: center;
   position: sticky;
+  background-color: white;
+  margin: 0 4em;
   top: 0;
+  z-index: 100;
 `;
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;

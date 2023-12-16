@@ -16,9 +16,9 @@ const StyledDiv = styled.div`
 const StyledMessage = styled.p`
   margin: 0.3em;
   font-size: 12px;
-  color: ${(props) => (props.color ? props.color : "white")};
+  color: ${(props) => props.color || "white"};
   &::after {
-    content: "${(props) => (props.after ? props.after : "")}";
+    content: "${(props) => props.after || ""}";
     margin-left: 0.6em;
   }
 `;

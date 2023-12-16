@@ -8,5 +8,5 @@ const StyledLogo = styled.img`
 
 export default function Logo() {
   const navigate = useNavigate();
-  return <StyledLogo src="./logo.jpg" alt="" onClick={() => navigate("/")} />;
+  return <StyledLogo src="/logo.jpg" alt="" onClick={() => navigate("/")} />;
 }

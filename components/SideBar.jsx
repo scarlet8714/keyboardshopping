@@ -11,6 +11,10 @@ const MemberAndCart = styled.div`
   display: flex;
   gap: 0.1rem;
   flex-direction: column;
+  justify-content: center;
+  z-index: 200;
+  height: 100vh;
+  background-color: #a88b47;
 `;
 
 export default function SideBar() {
