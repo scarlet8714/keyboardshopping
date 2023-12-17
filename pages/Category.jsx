@@ -36,9 +36,7 @@ export default function Category() {
         {isLoading ? (
           <LoadingSpinner />
         ) : (
-          data.map((item) => (
-            <ProductItem name={item.name} image={item.banner} />
-          ))
+          data.map((item) => <ProductItem data={item} />)
         )}
       </Container>
     </Breakpoints>

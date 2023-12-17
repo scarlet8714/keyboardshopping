@@ -3,7 +3,7 @@ import Breakpoints from "../components/Breakpoints";
 import HomePageCatgory from "../components/HomePageCatgory";
 import HomePageCarousel from "../components/HomePageCarousel";
 import { useQueries } from "@tanstack/react-query";
-import { getcarousel, getProductCategory } from "../services/apiProduct";
+import { getProductCategory } from "../services/apiProduct";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function HomePage() {
