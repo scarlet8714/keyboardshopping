@@ -8,15 +8,16 @@ const LoginForm = styled.form`
   transform: translate(-50%, -50%);
   width: 500px;
   height: 300px;
-  background-color: yellow;
+  padding: 30px 20px;
+  background-color: #f6f6f6;
+  border: 1px solid #5a5858;
+  border-radius: 30px;
+  text-align: center;
   z-index: 1000;
 `;
 const relogin = async () => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  console.log(user ? "yse" : "no");
-  return user.id;
+  const { data } = await supabase.from("user").select();
+  console.log(data);
 };
 
 const login = async ({ email, password }) => {
@@ -34,9 +35,18 @@ const fet = async () => {
   console.log(data);
 };
 
+const insertdata = async () => {
+  const { error } = await supabase.from("cart").insert({
+    pid: 1,
+    quantity: 12,
+  });
+  if (error) console.log(error);
+};
+
 export default function Login() {
   return (
     <>
+      <button onClick={insertdata}>++</button>
       <LoginForm
         onSubmit={(e) => {
           e.preventDefault();
@@ -49,6 +59,14 @@ export default function Login() {
         密碼:
         <input type="password" id="password" />
         <button>送出</button>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            insertdata();
+          }}
+        >
+          ++
+        </button>
       </LoginForm>
       <button onClick={() => relogin()}>偷偷的來</button>
       <button onClick={() => fet()}>來一點</button>

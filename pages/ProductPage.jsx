@@ -1,7 +1,5 @@
-import { useParams } from "react-router-dom";
-import React, { useRef, useState } from "react";
 // Import Swiper React components
-import { Swiper, SwiperSlide, useSwiper, useSwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
@@ -10,16 +8,21 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
 // import required modules
-import { FreeMode, Navigation, Thumbs, Pagination } from "swiper/modules";
+import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import styled from "styled-components";
+
+import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import Breakpoints from "../components/Breakpoints";
-import supabase from "../services/supabase";
+import { useQueries } from "@tanstack/react-query";
+import { getProduct, getProductImage } from "../services/apiProduct";
+import Quantity from "../components/Quantity";
+import ImageContainer from "../components/ImageContainer";
 
 const ProductDetail = styled.div`
   display: flex;
 `;
-
 const StyledSwiper = styled(Swiper)`
   img {
     width: 100%;
@@ -58,52 +61,31 @@ const StyledParagraph = styled.p`
 `;
 
 export default function ProductPage() {
-  const swiper = useSwiper();
   const [focus, setFocus] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const [content, setContent] = useState(null);
-  const [image, setImage] = useState(null);
   const { pid } = useParams();
-  useEffect(
-    function () {
-      async function getData() {
-        const { data, error } = await supabase
-          .from("product")
-          .select()
-          .eq("id", pid);
-        setContent(data);
-      }
-      getData();
-    },
-    [pid]
-  );
-  useEffect(
-    function () {
-      async function getImage() {
-        const { data, error } = await supabase
-          .from("image")
-          .select()
-          .eq("pid", pid)
-          .eq("recommend", false);
-        setImage(data);
-      }
-      getImage();
-    },
-    [pid]
-  );
-
-  function handleClick(index) {
-    console.log(index);
-    setFocus(index);
+  const [content, image] = useQueries({
+    queries: [
+      {
+        queryKey: ["product", pid],
+        queryFn: () => getProduct(pid),
+      },
+      {
+        queryKey: ["product", pid, "image"],
+        queryFn: () => getProductImage(pid),
+      },
+    ],
+  });
+  function handleMinus() {
+    setQuantity((quantity) => (quantity > 1 ? quantity - 1 : 1));
   }
 
-  useEffect(
-    function () {
-      console.log(focus);
-    },
-    [focus]
-  );
-
+  function handlePlus() {
+    setQuantity((quantity) =>
+      quantity >= content?.data?.[0].quantity ? 90 : quantity + 1
+    );
+  }
   return (
     <Breakpoints>
       <ProductDetail>
@@ -126,7 +108,7 @@ export default function ProductPage() {
             onSlideChange={({ realIndex }) => setFocus(realIndex)}
             className="mySwiper2"
           >
-            {image?.map((item, index) => (
+            {image?.data?.map((item, index) => (
               <StyledSwiperSlide key={index}>
                 <img src={item.src} alt="" loading="lazy" />
               </StyledSwiperSlide>
@@ -144,23 +126,75 @@ export default function ProductPage() {
             modules={[FreeMode, Navigation, Thumbs]}
             className="mySwiper"
           >
-            {image?.map((item, index) => (
+            {image?.data?.map((item, index) => (
               <StyledSwiperSlideBottom key={index} color={index === focus}>
-                <img src={item.src} alt="" />
+                <ImageContainer>
+                  <img src={item.src} alt="" />
+                </ImageContainer>
               </StyledSwiperSlideBottom>
             ))}
           </StyledSwiper>
         </Container>
+
         <Container>
-          <h2>{content?.[0].name}</h2>
+          <h2 style={{ marginBottom: "3rem" }}>{content?.data?.[0].name}</h2>
+          <div>
+            <h3 style={{ display: "inline-block", marginRight: "2rem" }}>
+              商品價格
+            </h3>
+            <h3
+              style={{
+                display: "inline-block",
+                marginRight: "2rem",
+                color: "red",
+              }}
+            >
+              $ 930
+            </h3>
+          </div>
+          <div>
+            <Quantity
+              handleMinus={handleMinus}
+              handlePlus={handlePlus}
+              quantity={quantity}
+              remainQuantity={content?.data?.[0].quantity}
+            />
+          </div>
+          <div style={{ width: "100%", display: "flex", marginTop: "3rem" }}>
+            <div
+              style={{
+                flex: "0 0 50%",
+                backgroundColor: "black",
+                color: "white",
+                textAlign: "center",
+                padding: "1rem 0",
+                cursor: "pointer",
+                marginRight: "1px",
+              }}
+            >
+              加入購物車
+            </div>
+            <div
+              style={{
+                flex: "0 0 50%",
+                backgroundColor: "#a88b47",
+                color: "white",
+                textAlign: "center",
+                padding: "1rem 0",
+                cursor: "pointer",
+              }}
+            >
+              直接購買
+            </div>
+          </div>
         </Container>
       </ProductDetail>
       <Content>
         <StyledH3>【商品介紹】</StyledH3>
         <StyledParagraph style={{ whiteSpace: "pre-line" }}>
-          {content?.[0].content}
+          {content?.data?.[0].content}
         </StyledParagraph>
-        {image?.map((item) => (
+        {image?.data?.map((item) => (
           <img src={item.src} alt="" style={{ width: "100%" }} />
         ))}
       </Content>

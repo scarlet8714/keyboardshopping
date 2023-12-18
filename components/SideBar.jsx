@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import Member from "./Member";
 import Cart from "./Cart";
+import { useState } from "react";
+import Login from "./Login";
 
 const MemberAndCart = styled.div`
   position: fixed;
@@ -18,10 +20,17 @@ const MemberAndCart = styled.div`
 `;
 
 export default function SideBar() {
+  const [login, setLogin] = useState(false);
+  function handleClick() {
+    setLogin(!login);
+  }
   return (
-    <MemberAndCart>
-      <Member />
-      <Cart />
-    </MemberAndCart>
+    <>
+      <MemberAndCart>
+        <Member onClick={handleClick} />
+        <Cart />
+      </MemberAndCart>
+      {login && <Login />}
+    </>
   );
 }
