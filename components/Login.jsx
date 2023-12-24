@@ -1,39 +1,69 @@
-import styled from "styled-components";
+import { useEffect } from "react";
+import styled, { css } from "styled-components";
+import { useAuth } from "../contexts/AuthContext";
+import { signIn, signOut } from "../services/apiAuth";
 import supabase from "../services/supabase";
-
-const LoginForm = styled.form`
+import Close from "../components/Close";
+const style = css`
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 500px;
-  height: 300px;
-  padding: 30px 20px;
-  background-color: #f6f6f6;
+  width: 300px;
+  height: 350px;
+  padding: 40px;
+  background-color: #ffffff;
   border: 1px solid #5a5858;
-  border-radius: 30px;
+  border-radius: 20px;
+  z-index: 1001;
   text-align: center;
-  z-index: 1000;
 `;
-const relogin = async () => {
-  const { data } = await supabase.from("user").select();
-  console.log(data);
-};
+const LoginForm = styled.form`
+  ${style}
+`;
 
-const login = async ({ email, password }) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: password,
-  });
-  console.log(data);
-  relogin();
-};
+const SignOut = styled.div`
+  ${style}
+  display: flex;
+  flex-direction: column;
+`;
 
-const fet = async () => {
-  const param = await relogin();
-  const { data, error } = await supabase.from("user").select().eq("uid", param);
-  console.log(data);
-};
+const StyledTextBox = styled.input`
+  width: 100%;
+  outline: none;
+  border: 1px solid #b8b7b7;
+  height: 2rem;
+  margin-top: 2rem;
+  padding-left: 0.5rem;
+  box-sizing: border-box;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  background-color: #a88b47;
+  color: white;
+  border: 0;
+  transition: all 0.2s;
+  cursor: pointer;
+  margin-top: 2rem;
+  height: 3rem;
+  &:hover {
+    background-color: black;
+  }
+`;
+
+const CloseContainer = styled.span`
+  position: absolute;
+  top: 25px;
+  right: 30px;
+  width: 10px;
+  height: 10px;
+  cursor: pointer;
+`;
+
+const StyledH2 = styled.h2`
+  margin: auto;
+`;
 
 const insertdata = async () => {
   const { error } = await supabase.from("cart").insert({
@@ -43,33 +73,54 @@ const insertdata = async () => {
   if (error) console.log(error);
 };
 
-export default function Login() {
+export default function Login({ setLogin }) {
+  const { isAuthenticated, setIsAuthenticated, user } = useAuth();
+  const handleLogin = async function (data) {
+    const account = await signIn(data);
+    if (account) {
+      setIsAuthenticated(true);
+    }
+  };
+
+  const handleLogout = async function (e) {
+    e.preventDefault();
+    const error = await signOut();
+    if (!error) {
+      setIsAuthenticated(false);
+      setLogin(false);
+    }
+  };
+
   return (
     <>
-      <button onClick={insertdata}>++</button>
-      <LoginForm
-        onSubmit={(e) => {
-          e.preventDefault();
-          login({ email: e.target[0].value, password: e.target[1].value });
-        }}
-      >
-        電子郵件:
-        <input type="text" id="email" />
-        <br />
-        密碼:
-        <input type="password" id="password" />
-        <button>送出</button>
-        <button
-          onClick={(e) => {
+      {!isAuthenticated ? (
+        <LoginForm
+          onSubmit={(e) => {
             e.preventDefault();
-            insertdata();
+            handleLogin({
+              email: e.target[0].value,
+              password: e.target[1].value,
+            });
           }}
         >
-          ++
-        </button>
-      </LoginForm>
-      <button onClick={() => relogin()}>偷偷的來</button>
-      <button onClick={() => fet()}>來一點</button>
+          <CloseContainer onClick={() => setLogin(false)}>
+            <Close />
+          </CloseContainer>
+          <h2>會員登入</h2>
+          <StyledTextBox type="text" id="email" placeholder="電子郵件" />
+          <StyledTextBox type="password" id="password" placeholder="密碼" />
+          <Button>登入</Button>
+        </LoginForm>
+      ) : (
+        <SignOut>
+          <CloseContainer onClick={() => setLogin(false)}>
+            <Close />
+          </CloseContainer>
+          <h1>歡迎回來!!</h1>
+          <StyledH2>{user}</StyledH2>
+          <Button onClick={handleLogout}>登出</Button>
+        </SignOut>
+      )}
     </>
   );
 }

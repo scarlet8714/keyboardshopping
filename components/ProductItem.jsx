@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import AddCartPopup from "./AddCartPopup";
 
 const Item = styled.div`
   border: 1px solid grey;
@@ -56,8 +58,11 @@ const StyledH5 = styled.h5`
   color: ${(props) => (props.type === "name" ? "black" : "red")};
 `;
 
-export default function ProductItem({ data }) {
+export default function ProductItem({ data, setPopup }) {
   const navigate = useNavigate();
+  function handleAddCart(data) {
+    setPopup({ visible: true, currentItem: data });
+  }
   function handleClick(id) {
     navigate(`/product/${id}`);
   }
@@ -72,7 +77,7 @@ export default function ProductItem({ data }) {
         {data.name}
       </StyledH5>
       <StyledH5 type="price">$ {data.price}</StyledH5>
-      <AddCart>加入購物車</AddCart>
+      <AddCart onClick={() => handleAddCart(data)}>加入購物車</AddCart>
     </Item>
   );
 }

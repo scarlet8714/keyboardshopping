@@ -1,8 +1,14 @@
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
+import { getCartQuantity } from "../services/apiCart";
+import useAddCart from "./useAddCart";
+import useCartQuantity from "./useCartQuantity";
 
 const CartIcon = styled.span`
   display: flex;
+  position: relative;
   padding: 0.6rem;
   background-color: #a88b47;
   border-bottom: 1px solid white;
@@ -12,9 +18,28 @@ const CartIcon = styled.span`
   }
 `;
 
+const CartQuantity = styled.span`
+  background-color: red;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  top: 5px;
+  right: 5px;
+  position: absolute;
+  display: flex;
+  color: white;
+  line-height: 1rem;
+  &::before {
+    content: "${(props) => props.quantity}";
+    margin: auto;
+  }
+`;
+
 export default function Cart() {
+  const { data } = useCartQuantity();
   return (
     <CartIcon>
+      <CartQuantity quantity={data} />
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="25"

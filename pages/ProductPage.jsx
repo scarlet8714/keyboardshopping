@@ -13,12 +13,13 @@ import styled from "styled-components";
 
 import { useParams } from "react-router-dom";
 import React, { useState } from "react";
-import { useEffect } from "react";
 import Breakpoints from "../components/Breakpoints";
 import { useQueries } from "@tanstack/react-query";
 import { getProduct, getProductImage } from "../services/apiProduct";
 import Quantity from "../components/Quantity";
 import ImageContainer from "../components/ImageContainer";
+import RemainQuantity from "../components/RemainQuantity";
+import useAddCart from "../components/useAddCart";
 
 const ProductDetail = styled.div`
   display: flex;
@@ -59,12 +60,42 @@ const StyledH3 = styled.h3`
 const StyledParagraph = styled.p`
   line-height: 2.5rem;
 `;
+const ProductQuantity = styled.div`
+  display: inline-block;
+  margin-right: 2rem;
+`;
+
+const AddCartButton = styled.div`
+  flex: 0 0 50%;
+  background-color: #000000;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  cursor: pointer;
+  margin-right: 1px;
+  &:hover {
+    background-color: #3a3838;
+  }
+`;
+
+const BuyButton = styled.div`
+  flex: 0 0 50%;
+  background-color: #a88b47;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  cursor: pointer;
+  &:hover {
+    background-color: #b99a4f;
+  }
+`;
 
 export default function ProductPage() {
   const [focus, setFocus] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const { pid } = useParams();
+  const { addAction, isError } = useAddCart();
   const [content, image] = useQueries({
     queries: [
       {
@@ -85,6 +116,17 @@ export default function ProductPage() {
     setQuantity((quantity) =>
       quantity >= content?.data?.[0].quantity ? 90 : quantity + 1
     );
+  }
+  function handleAddCart() {
+    addAction({
+      id: pid,
+      quantity: quantity,
+    });
+    if (isError) {
+      alert("加入購物車失敗!!");
+    } else {
+      alert("加入購物車成功!!");
+    }
   }
   return (
     <Breakpoints>
@@ -153,39 +195,17 @@ export default function ProductPage() {
             </h3>
           </div>
           <div>
+            <ProductQuantity>商品數量</ProductQuantity>
             <Quantity
               handleMinus={handleMinus}
               handlePlus={handlePlus}
               quantity={quantity}
-              remainQuantity={content?.data?.[0].quantity}
             />
+            <RemainQuantity remainQuantity={content?.data?.[0].quantity} />
           </div>
           <div style={{ width: "100%", display: "flex", marginTop: "3rem" }}>
-            <div
-              style={{
-                flex: "0 0 50%",
-                backgroundColor: "black",
-                color: "white",
-                textAlign: "center",
-                padding: "1rem 0",
-                cursor: "pointer",
-                marginRight: "1px",
-              }}
-            >
-              加入購物車
-            </div>
-            <div
-              style={{
-                flex: "0 0 50%",
-                backgroundColor: "#a88b47",
-                color: "white",
-                textAlign: "center",
-                padding: "1rem 0",
-                cursor: "pointer",
-              }}
-            >
-              直接購買
-            </div>
+            <AddCartButton onClick={handleAddCart}>加入購物車</AddCartButton>
+            <BuyButton>直接購買</BuyButton>
           </div>
         </Container>
       </ProductDetail>

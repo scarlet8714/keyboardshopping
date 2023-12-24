@@ -24,38 +24,21 @@ const Input = styled.input`
 `;
 
 const StyledDiv = styled.div`
-  display: inline-block;
+  display: ${(props) => (props.type !== "popup" ? "inline-block" : "block")};
   margin-right: 2rem;
   color: red;
+  /* float: left; */
   border: 1px solid #666464;
 `;
 
-const StyledH3 = styled.div`
-  display: inline-block;
-  margin-right: 2rem;
-`;
-
-const StyledParagraph = styled.p`
-  display: inline-block;
-  font-size: 1rem;
-  color: #666464be;
-`;
-
-export default function Quantity({
-  handlePlus,
-  handleMinus,
-  quantity,
-  remainQuantity,
-}) {
+export default function Quantity({ handlePlus, handleMinus, quantity, type }) {
   return (
     <>
-      <StyledH3>商品數量</StyledH3>
-      <StyledDiv>
+      <StyledDiv type={type}>
         <Button onClick={handleMinus}>-</Button>
         <Input type="text" value={quantity} />
         <Button onClick={handlePlus}>+</Button>
       </StyledDiv>
-      <StyledParagraph>剩餘數量: {remainQuantity}</StyledParagraph>
     </>
   );
 }

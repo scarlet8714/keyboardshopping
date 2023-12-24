@@ -23,7 +23,7 @@ const Container = styled.div`
 
     &:hover {
       border-color: #a88b47;
-      z-index: 101;
+      z-index: 99;
     }
     div {
       width: 100%;
