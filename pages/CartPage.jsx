@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
@@ -20,6 +20,18 @@ const Button = styled.button`
   &:hover {
     background-color: #a88b47;
     color: white;
+  }
+`;
+const Checkout = styled.button`
+  margin-left: auto;
+  display: block;
+  border: 0;
+  background-color: #1b1ba1;
+  color: white;
+  padding: 1rem 2rem;
+  cursor: pointer;
+  &:hover {
+    background-color: blue;
   }
 `;
 
@@ -148,6 +160,7 @@ export default function CartPage() {
           ))
         )}
       </CartContainer>
+      <Checkout>前往結帳</Checkout>
     </Breakpoints>
   );
 }
