@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { signIn, signOut } from "../services/apiAuth";
 import supabase from "../services/supabase";
 import Close from "../components/Close";
+import { useNavigate } from "react-router-dom";
 const style = css`
   position: fixed;
   top: 50%;
@@ -75,6 +76,7 @@ const insertdata = async () => {
 
 export default function Login({ setLogin }) {
   const { isAuthenticated, setIsAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
   const handleLogin = async function (data) {
     const account = await signIn(data);
     if (account) {
@@ -88,6 +90,7 @@ export default function Login({ setLogin }) {
     if (!error) {
       setIsAuthenticated(false);
       setLogin(false);
+      navigate("/");
     }
   };
 

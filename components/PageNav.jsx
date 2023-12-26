@@ -11,7 +11,8 @@ const StyledNav = styled.nav`
   text-align: center;
   position: sticky;
   background-color: white;
-  margin: 0 4em;
+  padding-left: 100px;
+  padding-right: 100px;
   top: 0;
   z-index: 100;
 `;
@@ -34,7 +35,7 @@ const StyledNavLink = styled(NavLink)`
 `;
 const StyledList = styled.ul`
   display: flex;
-  width: 100%;
+  flex-grow: 1;
   align-items: center;
   flex-direction: row;
   list-style: none;

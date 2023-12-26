@@ -11,7 +11,6 @@ import ProductItem from "../components/ProductItem";
 import { getProductCategory } from "../services/apiProduct";
 
 const Container = styled.div`
-  min-height: 500px;
   ${(props) =>
     props.isloading
       ? css`

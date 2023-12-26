@@ -11,7 +11,7 @@ import "swiper/css/thumbs";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import styled from "styled-components";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useState } from "react";
 import Breakpoints from "../components/Breakpoints";
 import { useQueries } from "@tanstack/react-query";
@@ -20,6 +20,7 @@ import Quantity from "../components/Quantity";
 import ImageContainer from "../components/ImageContainer";
 import RemainQuantity from "../components/RemainQuantity";
 import useAddCart from "../components/useAddCart";
+import { useAuth } from "../contexts/AuthContext";
 
 const ProductDetail = styled.div`
   display: flex;
@@ -96,6 +97,8 @@ export default function ProductPage() {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const { pid } = useParams();
   const { addAction, isError } = useAddCart();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [content, image] = useQueries({
     queries: [
       {
@@ -118,15 +121,42 @@ export default function ProductPage() {
     );
   }
   function handleAddCart() {
-    addAction({
-      id: pid,
-      quantity: quantity,
-    });
-    if (isError) {
-      alert("加入購物車失敗!!");
-    } else {
-      alert("加入購物車成功!!");
+    if (!isAuthenticated) {
+      alert("請先登入");
+      return;
     }
+    addAction(
+      {
+        id: pid,
+        quantity: quantity,
+      },
+      {
+        onSuccess: () => alert("加入購物車成功!!"),
+      },
+      {
+        onError: (err) => alert("加入購物車失敗!!"),
+      }
+    );
+  }
+  function handleBuy() {
+    if (!isAuthenticated) {
+      alert("請先登入");
+      return;
+    }
+    addAction(
+      {
+        id: pid,
+        quantity: quantity,
+      },
+      {
+        onSuccess: () => {
+          navigate("/cart");
+        },
+      },
+      {
+        onError: (err) => alert("加入購物車失敗!!"),
+      }
+    );
   }
   return (
     <Breakpoints>
@@ -205,7 +235,7 @@ export default function ProductPage() {
           </div>
           <div style={{ width: "100%", display: "flex", marginTop: "3rem" }}>
             <AddCartButton onClick={handleAddCart}>加入購物車</AddCartButton>
-            <BuyButton>直接購買</BuyButton>
+            <BuyButton onClick={handleBuy}>直接購買</BuyButton>
           </div>
         </Container>
       </ProductDetail>

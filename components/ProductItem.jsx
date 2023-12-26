@@ -1,12 +1,10 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import AddCartPopup from "./AddCartPopup";
 
 const Item = styled.div`
   border: 1px solid grey;
   position: relative;
-  height: 300px;
+  height: 350px;
   transition: all 0.3s;
   padding: 0.5rem;
   cursor: pointer;
@@ -41,9 +39,9 @@ const AddCart = styled.button`
   left: 0;
   border: 0;
   width: 100%;
+  height: 35px;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  transition: all 0.8s;
   cursor: pointer;
   &:hover {
     background-color: #aa9047;
@@ -55,6 +53,12 @@ const StyledH5 = styled.h5`
   margin: 0.5rem 0;
   border-bottom: 0.5rem solid transparent;
   height: 4rem;
+  color: ${(props) => (props.type === "name" ? "black" : "red")};
+`;
+const Price = styled.p`
+  margin: 0;
+  position: absolute;
+  bottom: 50px;
   color: ${(props) => (props.type === "name" ? "black" : "red")};
 `;
 
@@ -76,7 +80,7 @@ export default function ProductItem({ data, setPopup }) {
       <StyledH5 type="name" onClick={() => handleClick(data.id)}>
         {data.name}
       </StyledH5>
-      <StyledH5 type="price">$ {data.price}</StyledH5>
+      <Price type="price">$ {data.price}</Price>
       <AddCart onClick={() => handleAddCart(data)}>加入購物車</AddCart>
     </Item>
   );

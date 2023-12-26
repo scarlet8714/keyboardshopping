@@ -5,7 +5,6 @@ const Button = styled.button`
   height: 30px;
   background-color: #f6f6f6;
   border: 0;
-  transition: all 0.2s;
   cursor: pointer;
   &:hover {
     background-color: #a88b47;
@@ -27,7 +26,6 @@ const StyledDiv = styled.div`
   display: ${(props) => (props.type !== "popup" ? "inline-block" : "block")};
   margin-right: 2rem;
   color: red;
-  /* float: left; */
   border: 1px solid #666464;
 `;
 

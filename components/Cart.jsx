@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getCartQuantity } from "../services/apiCart";
 import useAddCart from "./useAddCart";
 import useCartQuantity from "./useCartQuantity";
+import { useAuth } from "../contexts/AuthContext";
 
 const CartIcon = styled.span`
   display: flex;
@@ -37,9 +39,11 @@ const CartQuantity = styled.span`
 
 export default function Cart() {
   const { data } = useCartQuantity();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   return (
-    <CartIcon>
-      <CartQuantity quantity={data} />
+    <CartIcon onClick={() => navigate("/cart")}>
+      {isAuthenticated && <CartQuantity quantity={data} />}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         height="25"

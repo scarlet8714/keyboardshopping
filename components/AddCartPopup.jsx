@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { addCart } from "../services/apiCart";
+import { useAuth } from "../contexts/AuthContext";
 import Quantity from "./Quantity";
 import RemainQuantity from "./RemainQuantity";
 import useAddCart from "./useAddCart";
@@ -48,7 +48,8 @@ const Button = styled.button`
 
 export default function AddCartPopup({ item, setPopup }) {
   const [quantity, setQuantity] = useState(1);
-  const { addAction, isError } = useAddCart();
+  const { addAction, error } = useAddCart();
+  const { isAuthenticated } = useAuth();
   function handleMinus() {
     setQuantity((quantity) => (quantity > 1 ? quantity - 1 : 1));
   }
@@ -60,23 +61,26 @@ export default function AddCartPopup({ item, setPopup }) {
   }
 
   function handleAddCart() {
-    addAction({
-      id: item.currentItem.id,
-      quantity: quantity,
-    });
-    if (isError) {
-      alert("加入購物車失敗!!");
-    } else {
-      setPopup(false);
-      alert("加入購物車成功!!");
+    if (!isAuthenticated) {
+      alert("請先登入");
+      return;
     }
+    addAction(
+      {
+        id: item.currentItem.id,
+        quantity: quantity,
+      },
+      {
+        onSuccess: (data) => {
+          alert("加入購物車成功");
+          setPopup(false);
+        },
+        onError: (err) => {
+          alert("加入購物車失敗");
+        },
+      }
+    );
   }
-  useEffect(
-    function () {
-      console.log(item);
-    },
-    [item]
-  );
   return (
     <Popup>
       <div>

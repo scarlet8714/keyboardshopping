@@ -6,7 +6,7 @@ function useAddCart() {
   const {
     mutate: addAction,
     isLoading,
-    isError,
+    error,
   } = useMutation({
     mutationFn: ({ id, quantity }) => addCart(id, quantity),
     onSuccess: () => {
@@ -14,7 +14,7 @@ function useAddCart() {
     },
     onError: (err) => console.error(err.message),
   });
-  return { addAction, isLoading, isError };
+  return { addAction, isLoading, error };
 }
 
 export default useAddCart;

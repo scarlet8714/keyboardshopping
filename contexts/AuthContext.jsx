@@ -14,7 +14,6 @@ function AuthProvider({ children }) {
   }
   async function checkAuthenticate() {
     const session = await getSession();
-    console.log(session);
     if (session !== null) {
       setIsAuthenticated(true);
       getUser();
