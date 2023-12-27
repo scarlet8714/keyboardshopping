@@ -1,8 +1,6 @@
-import { useEffect } from "react";
 import styled, { css } from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
 import { signIn, signOut } from "../services/apiAuth";
-import supabase from "../services/supabase";
 import Close from "../components/Close";
 import { useNavigate } from "react-router-dom";
 const style = css`
@@ -65,14 +63,6 @@ const CloseContainer = styled.span`
 const StyledH2 = styled.h2`
   margin: auto;
 `;
-
-const insertdata = async () => {
-  const { error } = await supabase.from("cart").insert({
-    pid: 1,
-    quantity: 12,
-  });
-  if (error) console.log(error);
-};
 
 export default function Login({ setLogin }) {
   const { isAuthenticated, setIsAuthenticated, user } = useAuth();

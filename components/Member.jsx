@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Login from "./Login";
 
 const MemberIcon = styled.span`
   display: flex;

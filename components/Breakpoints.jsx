@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 const Container = styled.div`
   width: 100%;
@@ -7,6 +7,6 @@ const Container = styled.div`
   min-height: 1056px;
 `;
 
-export default function Breakpoints({ children, type }) {
-  return <Container type={type}>{children}</Container>;
+export default function Breakpoints({ children }) {
+  return <Container>{children}</Container>;
 }

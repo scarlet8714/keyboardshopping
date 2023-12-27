@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
 import Quantity from "./Quantity";
@@ -48,7 +48,7 @@ const Button = styled.button`
 
 export default function AddCartPopup({ item, setPopup }) {
   const [quantity, setQuantity] = useState(1);
-  const { addAction, error } = useAddCart();
+  const { addAction } = useAddCart();
   const { isAuthenticated } = useAuth();
   function handleMinus() {
     setQuantity((quantity) => (quantity > 1 ? quantity - 1 : 1));

@@ -1,10 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { getCartQuantity } from "../services/apiCart";
-import useAddCart from "./useAddCart";
 import useCartQuantity from "./useCartQuantity";
 import { useAuth } from "../contexts/AuthContext";
 

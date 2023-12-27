@@ -7,7 +7,6 @@ import Login from "./Login";
 import Overlay from "./Overlay";
 import { useRef } from "react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const MemberAndCart = styled.div`
   position: fixed;
